@@ -20,19 +20,24 @@ var app = {
     // Application Constructor
     initialize: function() {
         this.bindEvents();
+
     },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.getElementById("sendTextButton").addEventListener('click', this.sendText, false);
+        document.getElementById("speakTextButton").addEventListener('click', this.speakButton, false);
     },
-    sendText: function() {
-        var textToSend = document.getElementById('textToSend').value;
-        document.getElementById('textSentDiv').innerHTML = "Text to send to Project Oxford is: " + textToSend;
-        document.getElementById('textSentDiv').style.visibility = 'visible';
+
+    speakText: function(textToSpeak) {
+        responsiveVoice.speak(textToSpeak);
     },
+
+    speakButton: function() {
+        var textToSpeak = document.getElementById('textToSpeak').value;
+        responsiveVoice.speak(textToSpeak, "US English Female", {volume: 1.5});
+    }
 };
 
 app.initialize();
