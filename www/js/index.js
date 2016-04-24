@@ -34,6 +34,17 @@ var mostRecentSenderName = "";
 var mostRecentSenderNumber = "";
 var mostRecentMessage = "No new messages";
 
+
+function startWatch() {
+    if(SMS) SMS.startWatch (function (){}, function (){});
+};
+function sendSMS() {
+    if(SMS) SMS.sendSMS (mostRecentSenderNumber, userResponses[currentResponse], function(){}, function(str){alert(str);});
+};
+
+
+
+
 //----------------------------------//
 // -------------- APP --------------//
 //----------------------------------//
@@ -49,12 +60,6 @@ var app = {
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
         document.addEventListener("deviceready", this.onDeviceReady, false);
-        // document.getElementById("speakTextButton").addEventListener('click', this.speakPressed, false);
-        document.getElementById("responseInputButton").addEventListener('click', this.addResponse, false);
-        document.getElementById("prevButton").addEventListener('click', this.selectPrevCurrentResponse, false);
-        document.getElementById("nextButton").addEventListener('click', this.selectNextCurrentResponse, false);
-        document.getElementById("playButton").addEventListener('click', this.playCurrentResponse, false);
-        document.getElementById("sendButton").addEventListener('click', this.sendCurrentResponse, false);
     },
 
     onDeviceReady: function() {
@@ -68,8 +73,47 @@ var app = {
         muzik.registerForGestures(app.selectNextCurrentResponse, muzik.GESTURE.SWIPE_FORWARD);
         muzik.registerForGestures(app.selectPrevCurrentResponse, muzik.GESTURE.SWIPE_BACK);
 
-    },
+        document.addEventListener('onSMSArrive', app.SMSArrive, false);
+        document.getElementById("responseInputButton").addEventListener('click', this.addResponse, false);
+        document.getElementById("prevButton").addEventListener('click', this.selectPrevCurrentResponse, false);
+        document.getElementById("nextButton").addEventListener('click', this.selectNextCurrentResponse, false);
+        document.getElementById("playButton").addEventListener('click', this.playCurrentResponse, false);
+        document.getElementById("sendButton").addEventListener('click', this.sendCurrentResponse, false);
 
+        // Start watching for incoming texts
+        startWatch();
+    },
+    
+    SMSArrive: function (e) {
+        var data = e.data;
+    
+        mostRecentMessage = data.body;
+        mostRecentSenderNumber = data.address;
+
+        var options      = new ContactFindOptions();
+        options.filter   = mostRecentSenderNumber;
+        options.multiple = false;
+        options.desiredFields = [navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
+        options.hasPhoneNumber = true;
+        var fields       = [navigator.contacts.fieldType.phoneNumbers];
+        navigator.contacts.find(fields, app.onFindSuccess, app.onFindError, options);
+    },
+    
+    onFindSuccess: function (contacts) {
+        if ( contacts.length == 0) {
+            mostRecentSenderName = "Unknown";
+        }
+        else {
+            mostRecentSenderName = contacts[0].name.givenName;
+        }
+  
+    },
+    
+    onFindError: function (contactError) {
+        mostRecentSenderName = "Unknown";
+    },
+    
+    
     speakText: function(textToSpeak) {
         // Given a string for a text message, will "speak" the text out loud
         responsiveVoice.speak(textToSpeak, "UK English Male", {volume: 1.5});
@@ -129,7 +173,7 @@ var app = {
         }
         else {
             // TODO (Noa): SEND THE RESPONSE TEXT!
-            alert("Not implemented :( ");
+            sendSMS ();
         }
     },
 
