@@ -35,6 +35,13 @@ var mostRecentSenderNumber = "";
 var mostRecentMessage = "No new messages";
 
 
+function startWatch() {
+    if(SMS) SMS.startWatch (function (){}, function (){});
+};
+function sendSMS() {
+    if(SMS) SMS.sendSMS (mostRecentSenderNumber, userResponses[currentResponse], function(){}, function(str){alert(str);});
+};
+
 
 
 
@@ -75,7 +82,6 @@ var app = {
     
         mostRecentMessage = data.body;
         mostRecentSenderNumber = data.address;
-        alert ("smsarrive: " + mostRecentMessage + " -- from: " + mostRecentSenderNumber);
 
         var options      = new ContactFindOptions();
         options.filter   = mostRecentSenderNumber;
@@ -83,24 +89,21 @@ var app = {
         options.desiredFields = [navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
         options.hasPhoneNumber = true;
         var fields       = [navigator.contacts.fieldType.phoneNumbers];
-        alert ("before search");
         navigator.contacts.find(fields, app.onFindSuccess, app.onFindError, options);
     },
     
     onFindSuccess: function (contacts) {
         if ( contacts.length == 0) {
-            alert('Not Found --> ' + contactNum);
-            mostRecentSenderName = "";
+            mostRecentSenderName = "Unknown";
         }
         else {
             mostRecentSenderName = contacts[0].name.givenName;
-            alert('Found --> ' + mostRecentSenderName);
         }
   
     },
     
     onFindError: function (contactError) {
-        alert('Find - ERROR ');
+        //alert('Find - ERROR ');
     },
     
     
@@ -152,7 +155,7 @@ var app = {
         }
         else {
             // TODO (Noa): SEND THE RESPONSE TEXT!
-            alert("Not implemented :( ");
+            sendSMS ();
         }
     },
 
