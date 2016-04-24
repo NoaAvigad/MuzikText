@@ -1,0 +1,29 @@
+{
+  "name": "muzik",
+  "version": “0.0.1”,
+  "description": "Cordova Plugin for Muzik Convertible Headphones",
+  "cordova": {
+    "id": "cordova-plugin-muzik",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuzikLLC/cordova-plugin-muzik.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": “Muzik”,
+  "license": “MIT”
+}
