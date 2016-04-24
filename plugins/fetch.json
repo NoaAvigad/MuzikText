@@ -15,6 +15,16 @@
         "is_top_level": true,
         "variables": {}
     },
+
+    "cordova-plugin-contacts": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-contacts"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+
     "cordova-plugin-media-capture": {
         "source": {
             "type": "registry",
@@ -23,6 +33,7 @@
         "is_top_level": true,
         "variables": {}
     },
+
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
@@ -31,6 +42,7 @@
         "is_top_level": false,
         "variables": {}
     },
+
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
