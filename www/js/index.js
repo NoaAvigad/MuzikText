@@ -63,7 +63,7 @@ var app = {
 
         // Registers all the relevant muzik gestures to functionality
         muzik.registerForGestures(app.playCurrentText, muzik.GESTURE.BUTTON_UP);
-        muzik.registerForGestures(app.playCurrentResponse, muzik.GESTURE.TAP
+        muzik.registerForGestures(app.playCurrentResponse, muzik.GESTURE.TAP);
         muzik.registerForGestures(app.sendCurrentResponse, muzik.GESTURE_TAP_HOLD);        
         muzik.registerForGestures(app.selectNextCurrentResponse, muzik.GESTURE.SWIPE_FORWARD);
         muzik.registerForGestures(app.selectPrevCurrentResponse, muzik.GESTURE.SWIPE_BACK);
@@ -84,7 +84,7 @@ var app = {
         else {
             app.speakText("No new messages.");
         }
-    }
+    },
 
     addResponse: function() {
         // Add a user-typed response to our list of possible responses
