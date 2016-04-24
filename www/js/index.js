@@ -17,6 +17,9 @@
  * under the License.
  */
 
+//----------------------------------//
+// ------ GLOBAL VARIABLES ---------//
+//----------------------------------//
 // List of strings representing the pre-typed texts
 // that the user can send out
 var userResponses = [];
@@ -31,6 +34,9 @@ var mostRecentSenderName = "";
 var mostRecentSenderNumber = "";
 var mostRecentMessage = "No new messages";
 
+//----------------------------------//
+// -------------- APP --------------//
+//----------------------------------//
 var app = {
 
     // Application Constructor
@@ -48,8 +54,7 @@ var app = {
         document.getElementById("prevButton").addEventListener('click', this.selectPrevCurrentResponse, false);
         document.getElementById("nextButton").addEventListener('click', this.selectNextCurrentResponse, false);
         document.getElementById("playButton").addEventListener('click', this.playCurrentResponse, false);
-        // document.getElementById("recordButton").addEventListener('click', this.recordPressed, false);
-        // document.getElementById("playButton").addEventListener('click', this.playRecording, false);
+        document.getElementById("sendButton").addEventListener('click', this.sendCurrentResponse, false);
     },
 
     onDeviceReady: function() {
@@ -103,7 +108,8 @@ var app = {
             app.speakText("There is nobody to send that to");
         }
         else {
-            // TODO: SEND THE RESPONSE TEXT!
+            // TODO (Noa): SEND THE RESPONSE TEXT!
+            alert("Not implemented :( ");
         }
     },
 
