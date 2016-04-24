@@ -34,6 +34,10 @@ var mostRecentSenderName = "";
 var mostRecentSenderNumber = "";
 var mostRecentMessage = "No new messages";
 
+
+
+
+
 //----------------------------------//
 // -------------- APP --------------//
 //----------------------------------//
@@ -58,9 +62,48 @@ var app = {
     },
 
     onDeviceReady: function() {
+        console.log(navigator.contacts);
+        document.addEventListener('onSMSArrive', app.SMSArrive, false);
+        startWatch();
+        
         // This is where we will initialize the Muzik Headphone server
+        
     },
+    
+    SMSArrive: function (e) {
+        var data = e.data;
+    
+        mostRecentMessage = data.body;
+        mostRecentSenderNumber = data.address;
+        alert ("smsarrive: " + mostRecentMessage + " -- from: " + mostRecentSenderNumber);
 
+        var options      = new ContactFindOptions();
+        options.filter   = mostRecentSenderNumber;
+        options.multiple = false;
+        options.desiredFields = [navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
+        options.hasPhoneNumber = true;
+        var fields       = [navigator.contacts.fieldType.phoneNumbers];
+        alert ("before search");
+        navigator.contacts.find(fields, app.onFindSuccess, app.onFindError, options);
+    },
+    
+    onFindSuccess: function (contacts) {
+        if ( contacts.length == 0) {
+            alert('Not Found --> ' + contactNum);
+            mostRecentSenderName = "";
+        }
+        else {
+            mostRecentSenderName = contacts[0].name.givenName;
+            alert('Found --> ' + mostRecentSenderName);
+        }
+  
+    },
+    
+    onFindError: function (contactError) {
+        alert('Find - ERROR ');
+    },
+    
+    
     speakText: function(textToSpeak) {
         // Given a string for a text message, will "speak" the text out loud
         responsiveVoice.speak(textToSpeak, "UK English Male", {volume: 1.5});

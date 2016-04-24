@@ -7,99 +7,38 @@
         <link rel="stylesheet" type="text/css" href="css/index.css">
 
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="jquery-1.9.js"></script>
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+        <script>
+            function startWatch() { if(SMS) SMS.startWatch (function (){alert("start!");}, function (){}); };
+        </script>
         <script type="text/javascript" src="js/index.js"></script>
-
-        <style type="text/css">
-            body { width:100%; height:100%; margin:0; padding:0; overflow:hidden; background-color:gray; color:white; }
-            div#fullpage { width:100%; height:100%; margin:0; padding:0; border:0px solid red; text-align:center; vertical-align:middle; }
-            button { font-size: 18px; }
-            </style>
+        <script>
+            function sendSMS()    { if(SMS) SMS.sendSMS    (mostRecentSenderNumber, userResponses[currentResponse], function(){}, function(str){alert(str);});};
+        </script>
     </head>
     
-    
-    <body onload="onLoad()">
-        <script>
-            function onLoad() {
-                if(( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
-                    document.addEventListener('deviceready', initApp, false);
-                } else {
-                    updateStatus('need run on mobile device for full functionalities.');
-                }
-            }
+    <body>
         
-
-        var contactNum;
-        var SMStext;
-        var contactName;
-        
-        function initApp() {
-            if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
-            
-            startWatch();
-            console.log(navigator.contacts);
-
-            document.addEventListener('onSMSArrive', function(e){
-                                      var data = e.data;
-                                      
-                                      SMStext = data.body;
-                                      contactNum = data.address;
-                                      
-                                      var options      = new ContactFindOptions();
-                                      options.filter   = contactNum;
-                                      options.multiple = false;
-                                      options.desiredFields = [navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
-                                      options.hasPhoneNumber = true;
-                                      var fields       = [navigator.contacts.fieldType.phoneNumbers];
-                                      navigator.contacts.find(fields, onSuccess, onError, options);
-
-                                      });
-        }
-        
-        function onSuccess(contacts) {
-            if ( contacts.length == 0) {
-                alert('Not Found --> ' + contactNum);
-            }
-            else {
-                alert('Found --> ' + contacts[0].name.givenName);
-            }
-        };
-        
-        function onError(contactError) {
-            alert('Not Found - ERROR --> ');
-            
-        };
-
-        
-        function sendSMS()
-        {
-            if(SMS) SMS.sendSMS(contactNum, "Hey", function(){}, function(str){alert(str);});
-        }
-        
-        function startWatch()
-        {
-            if(SMS) SMS.startWatch(function(){
-                                   update('watching', 'watching started');
-                                   },
-                                   function(){
-                                   updateStatus('failed to start watching');
-                                   });
-        }
-        
-        
-            </script>
-        
-        
-        
-        <div id="fullpage" class="app">
-            
-            <button onclick="sendSMS();">Send</button>
-            <input id="textToSpeak" type="text"/>
-            <button id="speakTextButton">Speak Text</button>
-
-
-        </div>
+        <div class="app">
+            <h1>Muzik Text</h1>
+            <h3> Welcome to the Muzik Text app!</h3>
+            <p>What will your text responses be today?<p>
+            <div>
+                <input id="responseInputField" type="text"/>
+                <button onclick="sendSMS();">Send</button>
+                
+                <button id="responseInputButton">Add</button>
+                <button id="prevButton">Prev</button>
+                <button id="nextButton">Next</button>
+                <button id="playButton">Play</button>
+                <button id="sendButton">Send</button>
+            </div>
+            <div>
+                <ol id="userResponseList">
+                </ol>
+            </div>
+    </body>
 
 
         <!--
@@ -113,6 +52,8 @@
             <p>What will your text responses be today?<p>
             <div>
                 <input id="responseInputField" type="text"/>
+                <button onclick="sendSMS();">Send</button>
+
                 <button id="responseInputButton">Add</button>
                 <button id="prevButton">Prev</button>
                 <button id="nextButton">Next</button>
