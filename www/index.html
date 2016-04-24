@@ -72,7 +72,7 @@ CTYPE html>
         
         function onSuccess(contacts) {
             if ( contacts.length == 0) {
-                alert('Not Found --> ' + contacts.length);
+                alert('Not Found --> ' + contactNum);
             }
             else {
             alert('Found --> ' + contacts[0].name.givenName);
@@ -212,7 +212,24 @@ CTYPE html>
             <div id='status'></div><hr/>
             <div id='data' style='text-align:left;'></div>
         </div>
-    </body>
+
+
+        <!--
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <title>Muzik Text</title>
+    </head>
+    <body>
+        <div class="app">
+            <h1>Read some text</h1>
+            <div>
+                <input id="textToSpeak" type="text"/>
+                <button id="speakTextButton">Speak Text</button> 
+            </div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+         !-->
 </html>
 
 
