@@ -58,13 +58,33 @@ var app = {
     },
 
     onDeviceReady: function() {
-        // This is where we will initialize the Muzik Headphone server
+        // Starts the muzik server 
+        muzik.startServer();
+
+        // Registers all the relevant muzik gestures to functionality
+        muzik.registerForGestures(app.playCurrentText, muzik.GESTURE.BUTTON_UP);
+        muzik.registerForGestures(app.playCurrentResponse, muzik.GESTURE.TAP
+        muzik.registerForGestures(app.sendCurrentResponse, muzik.GESTURE_TAP_HOLD);        
+        muzik.registerForGestures(app.selectNextCurrentResponse, muzik.GESTURE.SWIPE_FORWARD);
+        muzik.registerForGestures(app.selectPrevCurrentResponse, muzik.GESTURE.SWIPE_BACK);
+
     },
 
     speakText: function(textToSpeak) {
         // Given a string for a text message, will "speak" the text out loud
         responsiveVoice.speak(textToSpeak, "UK English Male", {volume: 1.5});
     },
+
+    playCurrentText: function() {
+        // Plays the most recent text received and who it was from
+        if (mostRecentSenderName != "") {
+        app.speakText("Message from " + mostRecentSenderName + ".");
+        app.speakText(mostRecentMessage);
+        }
+        else {
+            app.speakText("No new messages.");
+        }
+    }
 
     addResponse: function() {
         // Add a user-typed response to our list of possible responses
