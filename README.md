@@ -28,4 +28,4 @@ If you have a great idea, please don't hesitate to file a pull request.
 
 ### Made with < 3 in Vancouver
 
-This hack was lovingly made by Larissa Feng & Noa Avigad in Vancouver, (Beautiful) British Columbia.
+This hack was lovingly made by [Larissa Feng](www.github.com/mondayrain) & [Noa Avigad](www.github.com/NoaAvigad) in Vancouver, (Beautiful) British Columbia.
