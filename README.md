@@ -1,12 +1,13 @@
 # Muzik Text
-A project for MuzikHack Vancouver, 2016.
+The winning hack for MuzikHack Vancouver, 2016.
+Huge thanks to Microsoft MCEC & Muzik!
 
-This project uses:
-APACHE CORDOVA
-- sms plugin
+Read & Respond To Texts From Your Headphones
+============================================
 
-MUZIK CONVERTIBLE HEADPHONES
+Using the open source Apache Cordova plugin, you can now "read" and respond to SMS from your headphones. Details soon to come!
 
-MICROSOFT PROJECT OXFORD
-- Bing Speech  API JS SDK
-Key: 43530c78bfcd4564b74b513f061f9e4a
+Made with < 3
+=============
+
+This hack was lovingly made by Larissa Feng & Noa Avigad.
