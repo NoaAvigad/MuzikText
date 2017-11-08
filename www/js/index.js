@@ -17,7 +17,7 @@
  * under the License.
  */
 
- $(document).ready(function() {
+$(document).ready(function() {
 
     //----------------------------------//
     // ------ GLOBAL VARIABLES ---------//
@@ -36,12 +36,14 @@
     var mostRecentSenderNumber = "";
     var mostRecentMessage = "No new messages";
 
-
+    // Start listening to incoming tet messages
     function startWatch() {
-        if(SMS) SMS.startWatch (function (){}, function (){});
+        if(SMS) SMS.startWatch (() => {}, () => {});
     };
+
+    // Wrapper to sendSMS to make sure SMS is defined before it's called
     function sendSMS() {
-        if(SMS) SMS.sendSMS (mostRecentSenderNumber, userResponses[currentResponse], function(){}, function(str){alert(str);});
+        if(SMS) SMS.sendSMS (mostRecentSenderNumber, userResponses[currentResponse], () => {}, () => {});
     };
 
     //----------------------------------//
@@ -52,11 +54,9 @@
         // Application Constructor
         initialize: function() {
             this.bindEvents();
-        },
-        // Bind Event Listeners
-        //
-        // Bind any events that are required on startup. Common events are:
-        // 'load', 'deviceready', 'offline', and 'online'.
+        }(),
+
+        // Bind Event Listeners; events that are required on startup as well as the Muzik Headphones ones
         bindEvents: function() {
             document.addEventListener("deviceready", this.onDeviceReady, false);
 
@@ -80,30 +80,32 @@
             muzik.registerForGestures(app.selectPrevCurrentResponse, muzik.GESTURE.SWIPE_UP);
             muzik.registerForGestures(app.selectPrevCurrentResponse, muzik.GESTURE.SWIPE_FAST_UP);
 
+            // Bind function to handle incoming text messages
             document.addEventListener('onSMSArrive', app.SMSArrive, false);
-
 
             // Start watching for incoming texts
             startWatch();
         },
         
-        SMSArrive: function (e) {
-            var data = e.data;
-        
+        SMSArrive: function (smsObj) {
+            var data = smsObj.data;
+
+            // Update global variables
             mostRecentMessage = data.body;
             mostRecentSenderNumber = data.address;
 
-            var options      = new ContactFindOptions();
-            options.filter   = mostRecentSenderNumber;
+            // Set parameters for the Find method by the Cordova Contacts plugin
+            var options = new ContactFindOptions();
+            options.filter = mostRecentSenderNumber;
             options.multiple = false;
             options.desiredFields = [navigator.contacts.fieldType.name, navigator.contacts.fieldType.phoneNumbers];
             options.hasPhoneNumber = true;
-            var fields       = [navigator.contacts.fieldType.phoneNumbers];
+            var fields = [navigator.contacts.fieldType.phoneNumbers]; // Fields to look by
             navigator.contacts.find(fields, app.onFindSuccess, app.onFindError, options);
         },
         
         onFindSuccess: function (contacts) {
-            if ( contacts.length == 0) {
+            if (contacts.length == 0) {
                 mostRecentSenderName = "Unknown";
             }
             else {
@@ -116,8 +118,7 @@
         onFindError: function (contactError) {
             mostRecentSenderName = "Unknown";
         },
-        
-        
+
         speakText: function(textToSpeak) {
             // Given a string for a text message, will "speak" the text out loud
             responsiveVoice.speak(textToSpeak, "UK English Female", {volume: 1.5});
@@ -126,7 +127,7 @@
         playCurrentText: function() {
             // Plays the most recent text received and who it was from
             if (mostRecentSenderName != "") {
-            app.speakText(mostRecentSenderName + " says: " + mostRecentMessage + ".");
+                app.speakText(mostRecentSenderName + " says: " + mostRecentMessage + ".");
             }
             else {
                 app.speakText("No new messages.");
@@ -138,11 +139,11 @@
             var responseToAdd = document.getElementById('responseInputField').value;
 
             if (responseToAdd.length != 0) {
-                // If this is the first response to add, make it
-                // the current/default response
+                // If this is the first response to add, make it the current/default response
                 if (userResponses.length == 0) {
-                    currentResponse = 0;;
+                    currentResponse = 0;
                 }
+
                 // Then add it to our list of possible responses
                 userResponses.push(responseToAdd);
 
@@ -177,7 +178,7 @@
                 app.speakText("There is nobody to send that to");
             }
             else {
-                sendSMS ();
+                sendSMS();
                 app.speakText("Sent.");
             }
         },
@@ -190,7 +191,9 @@
             if (currentResponse == -1) {
                 return;
             }
-                 document.getElementById("response" + currentResponse).style.fontWeight = "normal";
+
+            document.getElementById("response" + currentResponse).style.fontWeight = "normal";
+
             // If there's only one response, just stay on that one
             if (userResponses.length == 1) {
                 app.speakText(userResponses[0]);
@@ -199,7 +202,7 @@
 
             // If we're one away from the last response,
             // then we need to loop back around to the beginning of the list.
-            if (currentResponse == userResponses.length -1) {
+            if (currentResponse == userResponses.length - 1) {
                 currentResponse = 0;
                 app.speakText(userResponses[currentResponse]);
             }
@@ -209,8 +212,9 @@
                 currentResponse = currentResponse + 1;
                 app.speakText(userResponses[currentResponse]);
             }
-            document.getElementById("response" + currentResponse).style.fontWeight = "900";
 
+            // UI indication of the selected response
+            document.getElementById("response" + currentResponse).style.fontWeight = "900";
         },
 
         selectPrevCurrentResponse: function() {
@@ -221,6 +225,7 @@
             if (currentResponse == -1) {
                 return;
             }
+
             document.getElementById("response" + currentResponse).style.fontWeight = "normal";
 
             // If there's only one response, just stay on that one
@@ -241,82 +246,9 @@
                 currentResponse = currentResponse - 1;
                 app.speakText(userResponses[currentResponse]);
             }
+
+            // UI indication of the selected response
             document.getElementById("response" + currentResponse).style.fontWeight = "900";
-
-        },
-
-        speakPressed: function() {
-            // FOR TESTING
-            var textToSpeak = document.getElementById('textToSpeak').value;
-            app.speakText(textToSpeak);
-        },   
-
-    // There are currently a quite a few problems with getting speech -> text:
-    //  - Recording audio with cordova is very difficult and finicky
-    //  - Android records audio to some weird format that most speech -> text don't take
-    /*
-        recordStatusCallback: function (mediaStatus, error) {
-          if (martinescu.Recorder.STATUS_ERROR == mediaStatus) {
-            alert(error);
-          }
-        },
-
-        startRecord: function() {
-            alert("running start record");
-            if (recorder == null) {
-                alert("recorder is null, now creating a new one");
-                recorder = new martinescu.Recorder(recordingPath, { sampleRate: 22050 }, app.recordStatusCallback);
-                alert("recorder object created");
-            }
-            recorder.start();     
-        },
-
-        recordSuccess: function(event) {
-            alert("Record event successful");
-        },
-
-        recordFailure: function(event) {
-            alert("Record event failed");
-        },
-
-        stopRecord: function() {
-            alert("Running stopRecord");
-            recorder.stop();
-        },
-
-        recordPressed: function() {
-            if (currentlyRecording) {
-                document.getElementById('recordButton').value = "Start recording";
-                app.stopRecord();
-                currentlyRecording = false;
-            }
-            else {
-                document.getElementById('recordButton').value = "Stop recording";
-                app.startRecord();
-                currentlyRecording = true;
-            }
-        },
-
-        playFailure: function(e) {
-            alert("Play failed");
-        },
-
-        playRecording: function() {
-            if (recorder != null) {
-                if (mediaPlayer == null) {
-                mediaPlayer = new Media(recorder.location(),
-                                       function() { alert("play successful"); },
-                                       function() { alert("play failed"); });
-                }
-                player.play(recorder);
-            }
-            else {
-                alert("There is no recording to play");
-            }
         }
-    */
     };
-
-    app.initialize();
-
 });
